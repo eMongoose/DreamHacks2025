@@ -3,6 +3,7 @@ public class SheepMerge : MonoBehaviour
 {
     public GameObject mergedSheepPrefab;
     public ParticleSystem mergeEffect;
+    public AudioSource mergeFailSound;
     private bool canMerge = true;   
     private float mergeCooldown = 0.5f;
     private NewSheep sheepManager;
@@ -38,6 +39,7 @@ public class SheepMerge : MonoBehaviour
                 if (mergeEffect != null)
                 {
                     Instantiate(mergeEffect, transform.position, Quaternion.identity);
+                    mergeFailSound.Play();
                 }
                 
                 // Create merged sheep at midpoint between the two
