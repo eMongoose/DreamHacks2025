@@ -1,5 +1,5 @@
 using UnityEngine;
-public class SheepMovement : MonoBehaviour
+public class SheepKill : MonoBehaviour
 {
     public float circleSpeed = 1f;   // Speed of circular motion
     public float circleRadius = 0.2f; // Radius of circular motion

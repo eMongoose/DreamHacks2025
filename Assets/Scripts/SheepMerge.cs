@@ -2,7 +2,6 @@ using UnityEngine;
 public class SheepMerge : MonoBehaviour
 {
     public GameObject mergedSheepPrefab;
-    public ParticleSystem mergeEffect;
     public AudioSource mergeFailSound;
     private bool canMerge = true;   
     private float mergeCooldown = 0.5f;
@@ -21,12 +20,12 @@ public class SheepMerge : MonoBehaviour
         if (collision.gameObject.CompareTag("Sheep"))
         {
             SheepMerge otherSheep = collision.gameObject.GetComponent<SheepMerge>();
-            SheepMovement myMovement = GetComponent<SheepMovement>();
-            SheepMovement otherMovement = collision.gameObject.GetComponent<SheepMovement>();
+            SheepKill myKill = GetComponent<SheepKill>();
+            SheepKill otherKill = collision.gameObject.GetComponent<SheepKill>();
             
             // Don't merge if either sheep is being dragged
-            if (myMovement != null && myMovement.isBeingDragged) return;
-            if (otherMovement != null && otherMovement.isBeingDragged) return;
+            if (myKill != null && myKill.isBeingDragged) return;
+            if (otherKill != null && otherKill.isBeingDragged) return;
             
             // Only merge if both sheep can merge
             if (otherSheep != null && otherSheep.canMerge && Random.value > 0.5f)
@@ -34,13 +33,6 @@ public class SheepMerge : MonoBehaviour
                 // Set both sheep to non-mergeable to prevent chain reactions
                 canMerge = false;
                 otherSheep.canMerge = false;
-                
-                // Spawn merge effect
-                if (mergeEffect != null)
-                {
-                    Instantiate(mergeEffect, transform.position, Quaternion.identity);
-                    mergeFailSound.Play();
-                }
                 
                 // Create merged sheep at midpoint between the two
                 Vector3 midPoint = (transform.position + collision.transform.position) / 2;
@@ -50,6 +42,7 @@ public class SheepMerge : MonoBehaviour
                 if (sheepManager != null)
                 {
                     sheepManager.UpdateSheepCount(-1);
+                    mergeFailSound.Play();
                 }
                 
                 // Destroy both original sheep
@@ -58,6 +51,12 @@ public class SheepMerge : MonoBehaviour
             }
             else
             {
+                // Play merge fail sound if merging fails
+                if (mergeFailSound != null)
+                {
+                    mergeFailSound.Play();
+                }
+
                 // Set cooldown on merge to prevent rapid collision checks
                 canMerge = false;
                 Invoke("ResetCanMerge", mergeCooldown);

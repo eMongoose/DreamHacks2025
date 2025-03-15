@@ -5,7 +5,7 @@ public class Drag : MonoBehaviour
     private Camera cam;
     private Vector3 offset;
     private Rigidbody selectedSheep;
-    private SheepMovement sheepMovement;
+    private SheepKill sheepKill;
 
     private Vector3 previousPosition;
     private Vector3 currentVelocity;
@@ -28,10 +28,10 @@ public class Drag : MonoBehaviour
             if (Physics.Raycast(ray, out hit) && hit.collider.CompareTag("Sheep"))
             {
                 selectedSheep = hit.collider.GetComponent<Rigidbody>();
-                sheepMovement = hit.collider.GetComponent<SheepMovement>();
+                sheepKill = hit.collider.GetComponent<SheepKill>();
 
-                if (sheepMovement != null)
-                    sheepMovement.SetDragging(true); // Stop movement
+                if (sheepKill != null)
+                    sheepKill.SetDragging(true); // Stop movement
 
                 offset = hit.point - selectedSheep.transform.position;
                 selectedSheep.useGravity = false;
@@ -83,11 +83,11 @@ public class Drag : MonoBehaviour
                 selectedSheep.useGravity = true;
                 selectedSheep.constraints = RigidbodyConstraints.None; // Re-enable rotation
 
-                if (sheepMovement != null)
-                    sheepMovement.SetDragging(false); // Resume movement
+                if (sheepKill != null)
+                    sheepKill.SetDragging(false); // Resume movement
 
                 selectedSheep = null;
-                sheepMovement = null;
+                sheepKill = null;
             }
         }
     }
